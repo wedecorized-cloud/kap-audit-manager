@@ -2,652 +2,735 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KAP Audit Manager</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Audit KKP — Easy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --brand:#0d6b6f;--brand-700:#0a5559;--brand-50:#e9f3f2;--brand-100:#cfe6e4;
-  --accent:#d5a445;--accent-50:#fbf3df;
-  --bg:#f3f5f8;--surface:#fff;--ink:#181d27;--muted:#6b7280;--faint:#98a1b1;--line:#eceef2;
-  --success:#128a55;--success-50:#e6f5ed;--warn:#b5821a;--warn-50:#fbf1dd;--danger:#d2484b;--danger-50:#fbeaea;
-  --radius:14px;--shadow:0 3px 14px rgba(18,43,61,.06);
+  --teal:#0d6b6f;--teal-d:#0a5559;--teal-s:#e9f3f2;--teal-m:#cfe6e4;
+  --amber:#c9922a;--amber-s:#fbf3df;
+  --bg:#eef2f5;--card:#fff;--ink:#141a22;--sub:#667085;--line:#e4e8ef;--faint:#98a2b3;
+  --ok:#0f8a56;--ok-s:#e6f6ee;--warn:#b7791f;--warn-s:#fef7e8;--bad:#c93c3c;--bad-s:#fdecec;
+  --r:16px;--shadow:0 1px 2px rgba(16,24,40,.04),0 8px 24px rgba(16,24,40,.06);
   --font:"Plus Jakarta Sans",system-ui,sans-serif;
 }
-*{box-sizing:border-box}body{margin:0;font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
-header{background:var(--brand);color:#fff;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{font-weight:800;letter-spacing:.2px}.sub{font-size:12px;opacity:.8;margin-top:2px}
-main{max-width:1120px;margin:24px auto;padding:0 16px 48px}
-.crumb{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.crumb button{background:none;border:0;color:var(--muted);padding:0;font-weight:600}.crumb button:hover{color:var(--brand)}
-.crumb .sep{color:var(--faint)}.crumb .cur{color:var(--ink)}
-h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.02em}
-.muted{color:var(--muted);font-size:13px;font-weight:500}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0 18px}
-.spacer{flex:1}
-.btn{border:0;border-radius:11px;padding:10px 14px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;transition:.15s}
-.btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed}
-.primary{background:var(--brand);color:#fff}.primary:hover{background:var(--brand-700)}
-.secondary{background:var(--surface);border:1px solid var(--line);color:var(--ink)}.secondary:hover{background:var(--brand-50);border-color:var(--brand-100);color:var(--brand-700)}
-.danger{background:var(--danger-50);color:var(--danger)}.danger:hover{filter:brightness(.97)}
-.ghost{background:transparent;color:var(--muted);padding:8px}.ghost:hover{background:var(--brand-50);color:var(--brand)}
-.grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-@media(max-width:820px){.g2,.g3{grid-template-columns:1fr}}
-.card,.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-.card{cursor:pointer;transition:.15s}.card:hover{transform:translateY(-2px);border-color:var(--brand-100)}
-.year{font-size:32px;font-weight:800;color:var(--brand)}.year-card{min-height:120px}
-.company-row{display:flex;align-items:center;gap:12px;cursor:pointer}
-.company-row .num{width:22px;color:var(--faint);font-weight:700;font-size:13px}
-.icon-tile{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--brand-50);color:var(--brand);font-size:18px;flex-shrink:0}
-.icon-tile.accent{background:var(--accent-50);color:#8a5a00}
-.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:700}
-.pill::before{content:"";width:6px;height:6px;border-radius:50%}
-.pill.muted{background:var(--bg);color:var(--muted)}.pill.muted::before{background:var(--faint)}
-.pill.brand{background:var(--brand-50);color:var(--brand-700)}.pill.brand::before{background:var(--brand)}
-.pill.success{background:var(--success-50);color:var(--success)}.pill.success::before{background:var(--success)}
-.pill.warn{background:var(--warn-50);color:var(--warn)}.pill.warn::before{background:var(--warn)}
-.field{margin-bottom:12px}label{display:block;font-size:11px;font-weight:700;margin-bottom:6px;color:#2a2f37}
-input,textarea,select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface);outline:none}
-input:focus,textarea:focus,select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(13,107,111,.12)}
-textarea{min-height:90px;resize:vertical}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
-@media(max-width:720px){.formgrid{grid-template-columns:1fr}}
-.status{padding:10px 12px;border-radius:10px;font-size:13px;font-weight:600;margin-top:12px}
-.status.info{background:var(--brand-50);color:var(--brand-700)}
-.status.ok{background:var(--success-50);color:var(--success)}
-.status.warn{background:var(--warn-50);color:var(--warn)}
-.hidden{display:none!important}
-.empty{text-align:center;padding:36px 16px;color:var(--muted)}
-.empty h3{margin:0 0 6px;color:var(--ink)}
-table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{font-size:11px;color:var(--muted);background:#fafbfc}
-pre{white-space:pre-wrap;max-height:280px;overflow:auto;background:#101820;color:#dfe8ef;border-radius:12px;padding:14px;font-size:12px}
-.search{position:relative;max-width:360px;margin-bottom:14px}
-.search input{padding-left:36px}
-.search .s{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:14px}
-.toast{position:fixed;bottom:22px;right:22px;z-index:60;max-width:320px;padding:12px 16px;border-radius:14px;font-size:13px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.15);animation:up .2s ease}
-.toast.ok{background:var(--brand);color:#fff}.toast.warn{background:var(--warn-50);color:var(--warn);border:1px solid rgba(181,130,26,.25)}
-@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.modal-bg{position:fixed;inset:0;background:rgba(24,29,39,.4);backdrop-filter:blur(2px);z-index:50;display:grid;place-items:center;padding:16px}
-.modal{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;width:100%;max-width:420px;box-shadow:0 20px 50px rgba(0,0,0,.15);position:relative}
-.modal h3{margin:0 0 4px;font-size:18px;font-weight:800}.modal .close{position:absolute;right:10px;top:10px}
-.row-actions{display:flex;gap:4px}
-.folder-head{display:flex;gap:12px;align-items:center;margin-bottom:14px}
-.small{font-size:12px}
-details summary{cursor:pointer;font-weight:700;color:var(--muted);font-size:13px}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:var(--font);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;background:none}
+.app{max-width:740px;margin:0 auto;padding:0 16px 110px}
+.top{position:sticky;top:0;z-index:20;background:rgba(238,242,245,.9);backdrop-filter:blur(12px);padding:12px 0 8px;border-bottom:1px solid transparent}
+.top.on{border-bottom-color:var(--line)}
+.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.wrap{flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px}
+.mark{width:36px;height:36px;border-radius:11px;background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:800;box-shadow:0 4px 12px rgba(13,107,111,.28)}
+.logo h1{margin:0;font-size:15px;font-weight:800}.logo p{margin:0;font-size:11px;color:var(--sub);font-weight:600}
+.hero{padding:10px 0 14px}
+.hero h2{margin:0 0 6px;font-size:24px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
+.hero p{margin:0;color:var(--sub);font-size:13.5px;font-weight:500;line-height:1.45}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px}
+.card+.card,.stack>*+*{margin-top:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 15px;border-radius:12px;font-weight:700;font-size:13.5px}
+.btn:active{transform:scale(.98)}.btn:disabled{opacity:.5}
+.btn-p{background:var(--teal);color:#fff;box-shadow:0 4px 14px rgba(13,107,111,.25)}.btn-p:hover{background:var(--teal-d)}
+.btn-s{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-s:hover{background:var(--teal-s);border-color:var(--teal-m);color:var(--teal-d)}
+.btn-g{color:var(--sub);min-height:36px;padding:0 8px}.btn-g:hover{background:var(--teal-s);color:var(--teal)}
+.btn-d{background:var(--bad-s);color:var(--bad)}.btn-b{width:100%}.btn-sm{min-height:34px;padding:0 11px;font-size:12.5px;border-radius:10px}
+.field{display:grid;gap:5px;margin-bottom:10px}
+.field label{font-size:11.5px;font-weight:700;color:#344054}
+input,select,textarea{width:100%;min-height:42px;padding:9px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;outline:none}
+textarea{min-height:84px;resize:vertical}
+input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,107,111,.12)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:560px){.g2{grid-template-columns:1fr}}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:0 12px;min-height:46px;box-shadow:var(--shadow)}
+.search input{border:0;min-height:44px;padding:0;box-shadow:none!important}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px}
+.chip{flex:0 0 auto;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12.5px;font-weight:700;color:var(--sub)}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.chip .n{opacity:.75;margin-left:3px}
+.client{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;cursor:pointer}
+.client:hover{background:var(--teal-s)}
+.av{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,var(--teal),#14919b);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex-shrink:0}
+.meta{flex:1;min-width:0}
+.name{font-weight:800;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.subline{margin-top:3px;font-size:11.5px;color:var(--sub);font-weight:600;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bar{height:6px;width:64px;background:var(--line);border-radius:99px;overflow:hidden;flex-shrink:0}.bar>i{display:block;height:100%;background:var(--teal)}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.75}
+.todo{background:#eef0f4;color:var(--sub)}.work{background:var(--teal-s);color:var(--teal-d)}.done{background:var(--ok-s);color:var(--ok)}.risk{background:var(--warn-s);color:var(--warn)}
+.focus{background:linear-gradient(135deg,#e9f3f2,#f7fbfb);border:1px solid var(--teal-m);border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
+.focus h3{margin:0 0 8px;font-size:13px;font-weight:800;color:var(--teal-d);text-transform:uppercase;letter-spacing:.04em}
+.focus-item{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px dashed var(--teal-m);cursor:pointer}
+.focus-item:first-of-type{border-top:0}
+.focus-item .t{font-weight:700;font-size:13.5px}.focus-item .s{font-size:11.5px;color:var(--sub);font-weight:500}
+.sec{margin:18px 0 8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--sub);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sec span:last-child{font-weight:600;text-transform:none;letter-spacing:0;font-size:11.5px}
+.step{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:8px;align-items:flex-start}
+.step.ok{background:var(--ok-s);border-color:#b7e4cb}
+.step.open{border-color:var(--teal-m);box-shadow:0 0 0 3px rgba(13,107,111,.08)}
+.chk{width:28px;height:28px;border-radius:999px;border:2px solid var(--line);flex-shrink:0;display:grid;place-items:center;background:#fff;font-size:12px;font-weight:800;color:var(--sub)}
+.step.ok .chk{background:var(--ok);border-color:var(--ok);color:#fff}
+.stitle{font-weight:800;font-size:14px;text-align:left;width:100%;padding:0;background:none;border:0;cursor:pointer}
+.sdesc{margin-top:2px;font-size:12px;color:var(--sub);font-weight:500;line-height:1.4}
+.body{flex:1;min-width:0}
+.panel{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.step.open .panel{display:block}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px}
+.tab{flex:0 0 auto;min-height:36px;padding:0 12px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--sub);background:#fff;border:1px solid var(--line)}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item .grow{flex:1;min-width:0}
+.item .ttl{font-weight:700;font-size:13.5px}
+.item .src{font-size:11.5px;color:var(--sub);margin-top:2px}
+.risk-q{padding:10px 0;border-bottom:1px solid var(--line)}
+.risk-q:last-child{border-bottom:0}
+.risk-q p{margin:0 0 8px;font-size:13px;font-weight:600}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--sub);background:#fff}
+.seg button.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.score{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--amber-s);border:1px solid #f0e0b0;margin-bottom:12px}
+.score .n{font-size:28px;font-weight:800;color:var(--amber);line-height:1}
+.score .l{font-size:12px;font-weight:600;color:#7a5a10}
+.help{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--amber-s);border:1px solid #f0e0b0;font-size:12px;font-weight:600;color:#7a5a10;line-height:1.45}
+.muted{color:var(--sub);font-size:12.5px;font-weight:500}
+.fab{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(238,242,245,.96) 30%,var(--bg));pointer-events:none}
+.fab>*{pointer-events:auto;max-width:740px;margin:0 auto}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;padding:11px 15px;border-radius:12px;font-size:13px;font-weight:700;opacity:0;z-index:60;transition:.2s;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.sheet-bg{position:fixed;inset:0;background:rgba(16,24,40,.42);z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.sheet{width:100%;max-width:460px;background:#fff;border-radius:18px;padding:18px 16px;box-shadow:0 -8px 40px rgba(0,0,0,.15)}
+.sheet h3{margin:0 0 4px;font-size:17px;font-weight:800}
+.sheet .sub{margin:0 0 12px;color:var(--sub);font-size:13px}
+.sheet .acts{display:flex;gap:8px;margin-top:12px}.sheet .acts .btn{flex:1}
+.back{display:inline-flex;align-items:center;gap:4px;color:var(--sub);font-weight:700;font-size:13px;min-height:34px;padding:0 4px;border-radius:8px}
+.back:hover{background:var(--teal-s);color:var(--teal)}
+.saved{font-size:11px;font-weight:700;color:var(--ok);opacity:0;transition:.2s}.saved.on{opacity:1}
+.draft{background:#f8fafb;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12.5px;line-height:1.5;white-space:pre-wrap;max-height:220px;overflow:auto}
+.empty{text-align:center;padding:28px 12px;color:var(--sub)}.empty h3{margin:0 0 6px;color:var(--ink)}
+.pbar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:12px 0 6px}.pbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#1aa3a8);transition:width .25s}
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <div class="brand">KAP AUDIT MANAGER</div>
-    <div class="sub">Client data &amp; KKP workspace · standalone</div>
-  </div>
-  <div id="topMeta" class="sub"></div>
-</header>
-<main><div id="app"></div></main>
-<div id="toast" class="toast hidden"></div>
-<div id="modalRoot"></div>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+<div id="modal"></div>
 
 <script>
-const PDFJS_URL="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
-const PDFJS_WORKER="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
-const TESS_URL="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
-const KEY="ledgera_audit_v1";
-const FOLDERS=["Pre Engagement","Risk Assessment","Risk Response","Completing & Reporting","Arsip KKP"];
-const FOLDER_META={
-  "Pre Engagement":{icon:"📋",desc:"Penerimaan dan perencanaan awal penugasan."},
-  "Risk Assessment":{icon:"🛡️",desc:"Penilaian risiko audit."},
-  "Risk Response":{icon:"🎯",desc:"Respons dan prosedur audit."},
-  "Completing & Reporting":{icon:"✅",desc:"Penyelesaian audit dan pelaporan."},
-  "Arsip KKP":{icon:"📦",desc:"Arsip final KKP."}
-};
-const ST={draft:["Draft","muted"],in_progress:["Berjalan","brand"],review:["Review","warn"],completed:["Selesai","success"]};
-const FS={empty:["Kosong","muted"],in_progress:["Berjalan","brand"],complete:["Lengkap","success"]};
-const DS={missing:"Belum ada",received:"Diterima",reviewed:"Direview",final:"Final"};
+/* ============================================================
+   Audit KKP Easy — inspired by AI audit tool patterns
+   (workflow, PBC, risk signals, evidence+source, today focus, draft assist)
+   NOT a clone of MindBridge/DataSnipper — lightweight engagement cockpit
+   ============================================================ */
 
-function emptyFolders(){
-  return Object.fromEntries(FOLDERS.map(k=>[k,{status:"empty",items:[]}]));
+const KEY = "kap_audit_easy_v2";
+const PDFJS_URL = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+const PDFJS_WORKER = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+
+const STEPS = [
+  { id:"info",  title:"Data klien",        desc:"Identitas dasar. Boleh dibantu PDF akta." },
+  { id:"pre",   title:"Pra-penugasan",     desc:"Perikatan, independensi, terima klien." },
+  { id:"risk",  title:"Pahami risiko",     desc:"Isi sinyal risiko + area fokus." },
+  { id:"work",  title:"Kerjakan prosedur", desc:"Bukti & testing lapangan." },
+  { id:"report",title:"Selesai & lapor",   desc:"Review, opini, arsip KKP." },
+];
+
+const RISK_Q = [
+  { id:"complex",  q:"Bisnis klien rumit / multi-entitas?" },
+  { id:"control",  q:"Pengendalian internal klien lemah?" },
+  { id:"fraud",    q:"Ada indikasi fraud / anomali?" },
+  { id:"going",    q:"Risiko kelangsungan usaha (going concern)?" },
+  { id:"estimate", q:"Banyak estimasi akuntansi material?" },
+];
+
+const ST = {
+  todo:{label:"Belum mulai",cls:"todo"},
+  work:{label:"Dikerjakan",cls:"work"},
+  done:{label:"Selesai",cls:"done"},
+};
+
+let db = load();
+let ui = { screen:"list", id:null, year:"all", q:"", tab:"langkah", open:"info" };
+
+function uid(){return crypto.randomUUID()}
+function now(){return new Date().toISOString()}
+function yNow(){return String(new Date().getFullYear())}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function ini(n){return String(n||"?").trim().split(/\s+/).slice(0,2).map(x=>x[0]?.toUpperCase()||"").join("")||"?"}
+
+function blank(p={}){
+  const steps={}; for(const s of STEPS) steps[s.id]={done:false,note:""};
+  const risk={}; for(const r of RISK_Q) risk[r.id]=0; // 0 unknown, 1 no, 2 yes
+  return {
+    id:uid(), name:"", year:yNow(), city:"", address:"", director:"", position:"Direktur Utama",
+    npwp:"", phone:"", status:"todo",
+    steps, risk, riskNote:"",
+    pbc:[],      // {id,title,status: open|got}
+    evidence:[], // {id,title,source,stepId}
+    createdAt:now(), updatedAt:now(), ...p
+  };
 }
-function makeCompany(name,extra={}){
-  const now=new Date().toISOString();
-  return {id:crypto.randomUUID(),name:name.trim(),address:"",city:"",director:"",position:"Direktur Utama",
-    commissioner:"",npwp:"",nib:"",legalForm:"PT",aktaNo:"",aktaDate:"",modalDasar:"",modalDisetor:"",
-    engagementPartner:"",engagementManager:"",status:"draft",notes:"",folders:emptyFolders(),
-    createdAt:now,updatedAt:now,...extra};
-}
-function defaultStore(){
-  const y=String(new Date().getFullYear());
-  return {version:1,companiesByYear:{[y]:[makeCompany("PT Contoh Audit Satu"),makeCompany("PT Contoh Audit Dua")]}};
-}
-function normalizeCompany(c){
-  const base=makeCompany(c.name||"Tanpa nama",c);
-  const folders=emptyFolders();
-  for(const k of FOLDERS){
-    const f=c.folders?.[k];
-    if(f) folders[k]={status:f.status||"empty",items:Array.isArray(f.items)?f.items:[]};
-  }
-  return {...base,id:c.id||base.id,folders,createdAt:c.createdAt||base.createdAt};
-}
+
 function load(){
   try{
     const raw=localStorage.getItem(KEY);
-    if(raw){
-      const p=JSON.parse(raw);
-      if(p?.version===1&&p.companiesByYear){
-        const map={};
-        for(const [y,list] of Object.entries(p.companiesByYear)) map[y]=(list||[]).map(normalizeCompany);
-        return {version:1,companiesByYear:map};
-      }
-    }
-    const legacy=localStorage.getItem("kap_companies_v8");
-    if(legacy){
-      const p=JSON.parse(legacy); const map={};
-      for(const [y,list] of Object.entries(p||{})) map[y]=(list||[]).map(c=>normalizeCompany(c));
-      const s={version:1,companiesByYear:map}; save(s); return s;
+    if(raw){const p=JSON.parse(raw); if(p?.clients) return p}
+    // migrate easy v1
+    const v1=localStorage.getItem("kap_audit_easy_v1");
+    if(v1){
+      const p=JSON.parse(v1);
+      const clients=(p.clients||[]).map(c=>normalize(c));
+      const db={clients}; save(db); return db;
     }
   }catch{}
-  const s=defaultStore(); save(s); return s;
+  const demo=blank({name:"PT Contoh Sejahtera",city:"Jakarta",director:"Budi Santoso",status:"work"});
+  demo.steps.info.done=true;
+  demo.pbc=[{id:uid(),title:"Mutasi bank 12 bulan",status:"open"},{id:uid(),title:"Akta pendirian & perubahan",status:"got"}];
+  demo.evidence=[{id:uid(),title:"Akta terbaru",source:"PDF klien · arsip legal",stepId:"info"}];
+  demo.risk.control=2; demo.risk.complex=1;
+  const db={clients:[demo]}; save(db); return db;
 }
-function save(s){localStorage.setItem(KEY,JSON.stringify(s));}
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
-function touch(c){return {...c,updatedAt:new Date().toISOString()};}
+function normalize(c){
+  const b=blank(c);
+  b.steps={...b.steps,...(c.steps||{})};
+  b.risk={...b.risk,...(c.risk||{})};
+  b.pbc=Array.isArray(c.pbc)?c.pbc:[];
+  b.evidence=Array.isArray(c.evidence)?c.evidence:[];
+  return b;
+}
+function save(x){localStorage.setItem(KEY,JSON.stringify(x||db))}
 
-let store=load();
-let view={name:"years"};
-let search="";
-let pdfCtx={text:"",pdf:null,file:null};
-
-function toast(msg,tone="ok"){
+function client(id){return db.clients.find(c=>c.id===id)||null}
+function progress(c){
+  const total=STEPS.length;
+  const done=STEPS.filter(s=>c.steps?.[s.id]?.done).length;
+  return {done,total,pct:Math.round(done/total*100)};
+}
+function riskScore(c){
+  // yes=2 counts as risk point; max 10
+  let pts=0, answered=0;
+  for(const r of RISK_Q){
+    const v=c.risk?.[r.id]??0;
+    if(v>0) answered++;
+    if(v===2) pts+=2;
+  }
+  return {pts, answered, max:10, label: pts>=6?"Tinggi":pts>=3?"Sedang":answered? "Rendah":"Belum diisi"};
+}
+function recompute(c){
+  const {done,total}=progress(c);
+  if(done===0) c.status="todo";
+  else if(done===total) c.status="done";
+  else c.status="work";
+  return c;
+}
+function upsert(c){
+  c.updatedAt=now(); recompute(c);
+  const i=db.clients.findIndex(x=>x.id===c.id);
+  if(i>=0) db.clients[i]=c; else db.clients.unshift(c);
+  save(); flashSaved();
+}
+function flashSaved(){
+  const el=document.getElementById("saved");
+  if(!el) return;
+  el.classList.add("on");
+  clearTimeout(flashSaved.t);
+  flashSaved.t=setTimeout(()=>el.classList.remove("on"),1100);
+}
+function toast(m){
   const el=document.getElementById("toast");
-  el.className="toast "+tone; el.textContent=msg; el.classList.remove("hidden");
-  clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.add("hidden"),3000);
+  el.textContent=m; el.classList.add("show");
+  clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove("show"),2200);
 }
-function setTop(){
-  document.getElementById("topMeta").textContent=
-    view.year?("Tahun Buku "+view.year+(view.companyId?(" · "+(getCompany()?.name||"")):"")):"";
-}
-function getCompany(){
-  if(!view.year||!view.companyId) return null;
-  return (store.companiesByYear[view.year]||[]).find(c=>c.id===view.companyId)||null;
-}
-function updateCompany(fn){
-  const list=store.companiesByYear[view.year]||[];
-  store={...store,companiesByYear:{...store.companiesByYear,[view.year]:list.map(c=>c.id===view.companyId?touch(fn(c)):c)}};
-  save(store);
-}
-function closeModal(){document.getElementById("modalRoot").innerHTML="";}
-function modal(html){
-  document.getElementById("modalRoot").innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">${html}<button class="btn ghost close" onclick="closeModal()">✕</button></div></div>`;
+function fmt(iso){
+  try{return new Date(iso).toLocaleDateString("id-ID",{day:"numeric",month:"short"})}catch{return "—"}
 }
 
-function crumb(parts){
-  return `<div class="crumb">${parts.map((p,i)=>`
-    ${i?`<span class="sep">/</span>`:""}
-    ${p.on?`<button type="button" onclick="${p.on}">${esc(p.l)}</button>`:`<span class="${i===parts.length-1?"cur":""}">${esc(p.l)}</span>`}
-  `).join("")}</div>`;
+/* ---------- focus / today ---------- */
+function focusItems(){
+  const out=[];
+  for(const c of db.clients){
+    if(c.status==="done") continue;
+    const openPbc=(c.pbc||[]).filter(p=>p.status==="open");
+    const next=STEPS.find(s=>!c.steps?.[s.id]?.done);
+    const rs=riskScore(c);
+    if(openPbc.length) out.push({id:c.id, title:c.name, sub:`${openPbc.length} dokumen masih diminta ke klien`, kind:"pbc"});
+    else if(rs.answered<RISK_Q.length && c.steps?.pre?.done) out.push({id:c.id, title:c.name, sub:"Isi sinyal risiko (5 pertanyaan)", kind:"risk"});
+    else if(next) out.push({id:c.id, title:c.name, sub:`Lanjut: ${next.title}`, kind:"step"});
+  }
+  return out.slice(0,4);
 }
 
-function goYears(){view={name:"years"}; search=""; render();}
-function goCompanies(y){view={name:"companies",year:y}; search=""; render();}
-function goCompany(id){view={name:"company",year:view.year,companyId:id}; render();}
-function goClient(){view={name:"clientData",year:view.year,companyId:view.companyId}; render();}
-function goFolder(f){view={name:"folder",year:view.year,companyId:view.companyId,folder:f}; render();}
-
+/* ---------- render ---------- */
 function render(){
-  setTop();
-  const app=document.getElementById("app");
-  if(view.name==="years") app.innerHTML=viewYears();
-  else if(view.name==="companies") app.innerHTML=viewCompanies();
-  else if(view.name==="company") app.innerHTML=viewCompany();
-  else if(view.name==="clientData") app.innerHTML=viewClient();
-  else if(view.name==="folder") app.innerHTML=viewFolder();
+  const root=document.getElementById("app");
+  if(ui.screen==="detail"){
+    const c=client(ui.id);
+    if(!c){ui.screen="list"; return render()}
+    root.innerHTML=viewDetail(c);
+  } else root.innerHTML=viewList();
+  const top=document.querySelector(".top");
+  if(top){
+    const fn=()=>top.classList.toggle("on",scrollY>4);
+    addEventListener("scroll",fn,{passive:true}); fn();
+  }
 }
 
-/* ---- Years ---- */
-function viewYears(){
-  const years=Object.keys(store.companiesByYear).sort((a,b)=>b-a);
-  return `
-  ${crumb([{l:"Audit KKP"}])}
-  <div class="toolbar">
-    <div><h1>Pilih Tahun</h1><p class="muted">Workspace audit per tahun buku. Data di browser — export untuk backup.</p></div>
-    <div class="spacer"></div>
-    <button class="btn secondary" onclick="importJson()">Import</button>
-    <button class="btn secondary" onclick="exportJson()">Export</button>
-    <button class="btn primary" onclick="promptAddYear()">＋ Tahun</button>
-  </div>
-  ${years.length?`<div class="grid g3">${years.map(y=>{
-    const list=store.companiesByYear[y]||[];
-    const done=list.filter(c=>c.status==="completed").length;
-    return `<div class="card year-card" onclick="goCompanies('${esc(y)}')">
-      <div style="display:flex;justify-content:space-between;align-items:start">
-        <div class="year">${esc(y)}</div>
-        <button class="btn ghost" title="Hapus" onclick="event.stopPropagation();confirmDeleteYear('${esc(y)}')">🗑</button>
-      </div>
-      <div class="muted" style="margin-top:6px">${list.length} perusahaan · ${done} selesai</div>
-      <div class="small" style="margin-top:12px;font-weight:700;color:var(--brand)">Buka daftar klien →</div>
-    </div>`;
-  }).join("")}</div>`:`
-  <div class="panel empty"><h3>Belum ada tahun buku</h3><p>Tambah tahun untuk mulai.</p>
-  <button class="btn primary" style="margin-top:12px" onclick="promptAddYear()">＋ Tambah tahun</button></div>`}`;
-}
-function promptAddYear(){
-  modal(`<h3>Tambah tahun buku</h3><p class="muted">Contoh: 2026</p>
-  <div class="field" style="margin-top:14px"><label>Tahun</label><input id="mYear" maxlength="4" inputmode="numeric" value="${new Date().getFullYear()}"></div>
-  <div class="toolbar" style="justify-content:flex-end;margin:16px 0 0">
-    <button class="btn secondary" onclick="closeModal()">Batal</button>
-    <button class="btn primary" onclick="addYear()">Simpan</button>
-  </div>`);
-  setTimeout(()=>document.getElementById("mYear")?.focus(),50);
-}
-function addYear(){
-  const y=(document.getElementById("mYear")?.value||"").trim();
-  if(!/^\d{4}$/.test(y)) return toast("Tahun harus 4 digit.","warn");
-  if(!store.companiesByYear[y]) store.companiesByYear[y]=[];
-  save(store); closeModal(); toast("Tahun "+y+" ditambahkan."); goCompanies(y);
-}
-function confirmDeleteYear(y){
-  modal(`<h3>Hapus tahun ${esc(y)}?</h3><p class="muted">Semua klien di tahun ini akan dihapus.</p>
-  <div class="toolbar" style="justify-content:flex-end;margin:16px 0 0">
-    <button class="btn secondary" onclick="closeModal()">Batal</button>
-    <button class="btn danger" onclick="deleteYear('${esc(y)}')">Hapus</button>
-  </div>`);
-}
-function deleteYear(y){
-  delete store.companiesByYear[y]; save(store); closeModal(); toast("Tahun dihapus."); goYears();
-}
+function viewList(){
+  const years=[...new Set(db.clients.map(c=>c.year))].sort((a,b)=>b-a);
+  let list=db.clients.slice();
+  if(ui.year!=="all") list=list.filter(c=>c.year===ui.year);
+  const q=ui.q.trim().toLowerCase();
+  if(q) list=list.filter(c=>[c.name,c.city,c.director].join(" ").toLowerCase().includes(q));
+  list.sort((a,b)=>{
+    const r={work:0,todo:1,done:2};
+    return (r[a.status]-r[b.status])||a.name.localeCompare(b.name,"id");
+  });
+  const focus=focusItems();
+  const working=db.clients.filter(c=>c.status==="work").length;
 
-/* ---- Companies ---- */
-function viewCompanies(){
-  const list=store.companiesByYear[view.year]||[];
-  const q=search.trim().toLowerCase();
-  const filtered=q?list.filter(c=>c.name.toLowerCase().includes(q)):list;
   return `
-  ${crumb([{l:"Audit KKP",on:"goYears()"},{l:view.year}])}
-  <div class="toolbar">
-    <div><h1>Perusahaan ${esc(view.year)}</h1><p class="muted">Pilih klien untuk workspace KKP.</p></div>
-    <div class="spacer"></div>
-    <button class="btn secondary" onclick="goYears()">← Tahun</button>
-    <button class="btn primary" onclick="promptAddCompany()">＋ Tambah perusahaan</button>
-  </div>
-  <div class="search"><span class="s">⌕</span><input id="q" placeholder="Cari nama perusahaan…" value="${esc(search)}" oninput="search=this.value;render()"></div>
-  ${filtered.length?`<div class="grid">${filtered.map((c,i)=>`
-    <div class="card company-row" onclick="goCompany('${c.id}')">
-      <span class="num">${i+1}.</span>
-      <div class="icon-tile">🏢</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(c.name)}</div>
-        <div class="muted small" style="margin-top:4px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <span class="pill ${ST[c.status][1]}">${ST[c.status][0]}</span>
-          ${c.city?`<span>${esc(c.city)}</span>`:""}
-          ${c.director?`<span>· ${esc(c.director)}</span>`:""}
-        </div>
-      </div>
-      <div class="row-actions" onclick="event.stopPropagation()">
-        <button class="btn ghost" onclick="promptRename('${c.id}')">✎</button>
-        <button class="btn ghost" onclick="confirmDeleteCompany('${c.id}')">🗑</button>
-      </div>
-    </div>`).join("")}</div>`:`
-  <div class="panel empty"><h3>${list.length?"Tidak ada hasil":"Belum ada perusahaan"}</h3>
-  ${!list.length?`<button class="btn primary" style="margin-top:12px" onclick="promptAddCompany()">＋ Tambah perusahaan</button>`:""}</div>`}`;
-}
-function promptAddCompany(){
-  modal(`<h3>Tambah perusahaan</h3>
-  <div class="field" style="margin-top:14px"><label>Nama</label><input id="mName" placeholder="PT …"></div>
-  <div class="toolbar" style="justify-content:flex-end;margin:16px 0 0">
-    <button class="btn secondary" onclick="closeModal()">Batal</button>
-    <button class="btn primary" onclick="addCompany()">Simpan</button>
-  </div>`);
-  setTimeout(()=>document.getElementById("mName")?.focus(),50);
-}
-function addCompany(){
-  const name=(document.getElementById("mName")?.value||"").trim();
-  if(!name) return toast("Nama wajib.","warn");
-  store.companiesByYear[view.year]=[...(store.companiesByYear[view.year]||[]),makeCompany(name)];
-  save(store); closeModal(); toast("Perusahaan ditambahkan."); render();
-}
-function promptRename(id){
-  const c=(store.companiesByYear[view.year]||[]).find(x=>x.id===id);
-  modal(`<h3>Ubah nama</h3>
-  <div class="field" style="margin-top:14px"><label>Nama</label><input id="mName" value="${esc(c?.name||"")}"></div>
-  <div class="toolbar" style="justify-content:flex-end;margin:16px 0 0">
-    <button class="btn secondary" onclick="closeModal()">Batal</button>
-    <button class="btn primary" onclick="renameCompany('${id}')">Simpan</button>
-  </div>`);
-}
-function renameCompany(id){
-  const name=(document.getElementById("mName")?.value||"").trim();
-  if(!name) return toast("Nama wajib.","warn");
-  store.companiesByYear[view.year]=(store.companiesByYear[view.year]||[]).map(c=>c.id===id?touch({...c,name}):c);
-  save(store); closeModal(); toast("Nama diubah."); render();
-}
-function confirmDeleteCompany(id){
-  const c=(store.companiesByYear[view.year]||[]).find(x=>x.id===id);
-  modal(`<h3>Hapus perusahaan?</h3><p class="muted">"${esc(c?.name||"")}" dan folder KKP-nya akan dihapus.</p>
-  <div class="toolbar" style="justify-content:flex-end;margin:16px 0 0">
-    <button class="btn secondary" onclick="closeModal()">Batal</button>
-    <button class="btn danger" onclick="deleteCompany('${id}')">Hapus</button>
-  </div>`);
-}
-function deleteCompany(id){
-  store.companiesByYear[view.year]=(store.companiesByYear[view.year]||[]).filter(c=>c.id!==id);
-  save(store); closeModal(); toast("Dihapus."); render();
-}
+  <div class="top"><div class="row between">
+    <div class="logo"><div class="mark">A</div><div><h1>Audit KKP</h1><p>Easy · pola tools audit modern</p></div></div>
+    <button class="btn btn-s btn-sm" type="button" onclick="doExport()">Export</button>
+  </div></div>
 
-/* ---- Company workspace ---- */
-function viewCompany(){
-  const c=getCompany(); if(!c) return goCompanies(view.year),"";
-  return `
-  ${crumb([{l:"Audit KKP",on:"goYears()"},{l:view.year,on:`goCompanies('${view.year}')`},{l:c.name}])}
-  <div class="toolbar">
-    <div><h1>${esc(c.name)}</h1><p class="muted">Tahun buku ${esc(view.year)}</p></div>
-    <div class="spacer"></div>
-    <select id="engStatus" class="btn secondary" onchange="setEngStatus(this.value)">
-      ${Object.entries(ST).map(([k,v])=>`<option value="${k}" ${c.status===k?"selected":""}>${v[0]}</option>`).join("")}
-    </select>
-    <button class="btn secondary" onclick="goCompanies('${view.year}')">← Perusahaan</button>
+  <div class="hero">
+    <h2>Kerjaan audit,<br>tanpa ribet folder</h2>
+    <p>${db.clients.length} klien · ${working} aktif. Alur mirip platform audit: fokus hari ini → langkah → risiko → PBC → bukti.</p>
   </div>
-  <div class="grid g3">
-    <div class="card" onclick="goClient()">
-      <div class="icon-tile accent" style="margin-bottom:12px">📄</div>
-      <h3 style="margin:0 0 6px">Data Klien</h3>
-      <p class="muted">Identitas, NPWP, ekstrak PDF akta.</p>
-      <p class="muted small" style="margin-top:10px">${esc([c.director,c.city,c.npwp].filter(Boolean).join(" · ")||"Belum lengkap")}</p>
+
+  ${focus.length?`
+  <div class="focus">
+    <h3>Fokus hari ini</h3>
+    ${focus.map(f=>`
+      <div class="focus-item" onclick="openClient('${f.id}')">
+        <div class="av" style="width:34px;height:34px;font-size:11px;border-radius:10px">${esc(ini(f.title))}</div>
+        <div class="grow"><div class="t">${esc(f.title)}</div><div class="s">${esc(f.sub)}</div></div>
+        <span style="color:var(--teal);font-weight:800">→</span>
+      </div>`).join("")}
+  </div>`:""}
+
+  <div class="search"><span style="color:var(--faint)">⌕</span>
+    <input id="q" type="search" placeholder="Cari klien…" value="${esc(ui.q)}" autocomplete="off">
+  </div>
+
+  <div class="filters">
+    <button type="button" class="chip ${ui.year==="all"?"on":""}" onclick="setYear('all')">Semua <span class="n">${db.clients.length}</span></button>
+    ${years.map(y=>`<button type="button" class="chip ${ui.year===y?"on":""}" onclick="setYear('${esc(y)}')">${esc(y)}</button>`).join("")}
+  </div>
+
+  ${list.length===0?`
+    <div class="card empty"><h3>Belum ada klien</h3><p class="muted">Tambah klien — cuma nama & tahun.</p>
+    <button class="btn btn-p" type="button" onclick="sheetNew()">＋ Tambah klien</button></div>
+  `:`
+    <div class="card" style="padding:6px">
+      ${list.map(c=>{
+        const p=progress(c); const st=ST[c.status]; const rs=riskScore(c);
+        return `<div class="client" onclick="openClient('${c.id}')">
+          <div class="av">${esc(ini(c.name))}</div>
+          <div class="meta">
+            <div class="name">${esc(c.name||"Tanpa nama")}</div>
+            <div class="subline">
+              <span class="pill ${st.cls}">${st.label}</span>
+              <span>${esc(c.year)}</span>
+              ${rs.answered?`<span class="pill risk">Risiko ${rs.label}</span>`:""}
+              <span>${p.done}/${p.total}</span>
+            </div>
+          </div>
+          <div class="bar"><i style="width:${p.pct}%"></i></div>
+        </div>`;
+      }).join("")}
     </div>
-    ${FOLDERS.map(f=>{
-      const folder=c.folders[f]; const m=FOLDER_META[f];
-      return `<div class="card" onclick="goFolder('${f}')">
-        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-          <div class="icon-tile">${m.icon}</div>
-          <span class="pill ${FS[folder.status][1]}">${FS[folder.status][0]}</span>
+  `}
+
+  <div class="help"><strong>Bukan pengganti MindBridge/DataSnipper.</strong> Ini cockpit penugasan: langkah, risiko ringkas, minta dokumen (PBC), bukti ber-sumber, draf catatan. AI/draf selalu dicek manusia.</div>
+
+  <div class="fab"><button class="btn btn-p btn-b" type="button" onclick="sheetNew()">＋ Tambah klien</button></div>
+  `;
+}
+
+function viewDetail(c){
+  const p=progress(c); const st=ST[c.status]; const rs=riskScore(c);
+  return `
+  <div class="top"><div class="row between">
+    <button type="button" class="back" onclick="goList()">← Kembali</button>
+    <span class="saved" id="saved">Tersimpan</span>
+  </div></div>
+
+  <div style="padding:4px 0 8px">
+    <h2 style="margin:0 0 6px;font-size:22px;font-weight:800;letter-spacing:-.02em" id="title">${esc(c.name||"Tanpa nama")}</h2>
+    <div class="row wrap" style="gap:8px">
+      <span class="pill ${st.cls}" id="stBadge">${st.label}</span>
+      <span class="muted">Tahun ${esc(c.year)}</span>
+      <span class="pill risk">Risiko: ${rs.label} (${rs.pts}/${rs.max})</span>
+      <span class="muted">· ${fmt(c.updatedAt)}</span>
+    </div>
+    <div class="pbar"><i style="width:${p.pct}%"></i></div>
+    <div class="muted" style="font-weight:700">${p.done}/${p.total} langkah · ${(c.pbc||[]).filter(x=>x.status==="open").length} PBC terbuka · ${(c.evidence||[]).length} bukti</div>
+  </div>
+
+  <div class="tabs">
+    ${[["langkah","Langkah"],["risiko","Risiko"],["pbc","Minta dokumen"],["bukti","Bukti"],["draf","Asisten draf"]].map(([k,l])=>
+      `<button type="button" class="tab ${ui.tab===k?"on":""}" onclick="setTab('${k}')">${l}</button>`).join("")}
+  </div>
+
+  ${ui.tab==="langkah"?tabSteps(c):""}
+  ${ui.tab==="risiko"?tabRisk(c):""}
+  ${ui.tab==="pbc"?tabPbc(c):""}
+  ${ui.tab==="bukti"?tabEvidence(c):""}
+  ${ui.tab==="draf"?tabDraft(c):""}
+
+  <div class="sec"><span>Zona bahaya</span></div>
+  <div class="card row between">
+    <div><div style="font-weight:800;font-size:13.5px">Hapus klien</div><div class="muted" style="font-size:12px">Hilang dari perangkat ini</div></div>
+    <button type="button" class="btn btn-d btn-sm" onclick="sheetDel('${c.id}')">Hapus</button>
+  </div>
+  <div class="help">Disclaimer: skor risiko & draf asisten <strong>bukan opini audit</strong>. Semua output wajib direview profesional (mirip praktik AI tools enterprise).</div>
+  `;
+}
+
+function tabSteps(c){
+  return STEPS.map((s,idx)=>{
+    const stt=c.steps?.[s.id]||{done:false,note:""};
+    const open=ui.open===s.id;
+    return `<div class="step ${stt.done?"ok":""} ${open?"open":""}">
+      <button type="button" class="chk" onclick="toggleStep('${s.id}')">${stt.done?"✓":idx+1}</button>
+      <div class="body">
+        <button type="button" class="stitle" onclick="toggleOpen('${s.id}')">${esc(s.title)}</button>
+        <div class="sdesc">${esc(s.desc)}</div>
+        <div class="panel">
+          ${s.id==="info"?infoFields(c):`
+            <div class="field"><label>Catatan langkah</label>
+              <textarea data-step-note="${s.id}" placeholder="Ringkas apa yang sudah/belum…">${esc(stt.note||"")}</textarea>
+            </div>`}
+          <div class="row wrap" style="gap:8px;margin-top:4px">
+            <button type="button" class="btn btn-sm ${stt.done?"btn-s":"btn-p"}" onclick="toggleStep('${s.id}')">${stt.done?"Batal centang":"Tandai selesai"}</button>
+            ${s.id==="risk"?`<button type="button" class="btn btn-s btn-sm" onclick="setTab('risiko')">Isi sinyal risiko →</button>`:""}
+            ${s.id==="work"?`<button type="button" class="btn btn-s btn-sm" onclick="setTab('bukti')">Kelola bukti →</button>`:""}
+            ${s.id==="pre"?`<button type="button" class="btn btn-s btn-sm" onclick="setTab('pbc')">Daftar minta dokumen →</button>`:""}
+          </div>
         </div>
-        <h3 style="margin:0 0 6px">${esc(f)}</h3>
-        <p class="muted">${esc(m.desc)}</p>
-        <p class="muted small" style="margin-top:10px">${folder.items.length} item dokumen</p>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function infoFields(c){
+  return `
+  <div class="g2">
+    <div class="field" style="grid-column:1/-1"><label>Nama</label><input data-f="name" value="${esc(c.name)}"></div>
+    <div class="field"><label>Tahun buku</label><input data-f="year" maxlength="4" inputmode="numeric" value="${esc(c.year)}"></div>
+    <div class="field"><label>Kota</label><input data-f="city" value="${esc(c.city)}"></div>
+    <div class="field" style="grid-column:1/-1"><label>Alamat</label><input data-f="address" value="${esc(c.address)}"></div>
+    <div class="field"><label>Direktur</label><input data-f="director" value="${esc(c.director)}"></div>
+    <div class="field"><label>Jabatan</label><input data-f="position" value="${esc(c.position)}"></div>
+    <div class="field"><label>NPWP</label><input data-f="npwp" value="${esc(c.npwp)}"></div>
+    <div class="field"><label>WA / telp</label><input data-f="phone" value="${esc(c.phone)}"></div>
+  </div>
+  <div style="margin-top:8px;padding-top:10px;border-top:1px dashed var(--line)">
+    <div style="font-weight:800;font-size:12.5px;margin-bottom:6px">Bantu isi dari PDF akta (opsional)</div>
+    <div class="row wrap" style="gap:8px">
+      <input id="akta" type="file" accept="application/pdf" style="flex:1;min-width:140px;font-size:12px">
+      <button type="button" class="btn btn-s btn-sm" id="btnAkta" onclick="readAkta()">Baca PDF</button>
+    </div>
+    <div class="muted" id="aktaSt" style="margin-top:6px"></div>
+  </div>`;
+}
+
+function tabRisk(c){
+  const rs=riskScore(c);
+  return `
+  <div class="score">
+    <div class="n">${rs.pts}</div>
+    <div class="l"><strong>Skor sinyal risiko</strong> (0–10)<br>${rs.label} · ${rs.answered}/${RISK_Q.length} dijawab<br><span style="opacity:.85">Pola “risk signal” ala MindBridge — versi manual ringan, bukan ML transaksi.</span></div>
+  </div>
+  <div class="card">
+    ${RISK_Q.map(r=>{
+      const v=c.risk?.[r.id]??0;
+      return `<div class="risk-q">
+        <p>${esc(r.q)}</p>
+        <div class="seg">
+          <button type="button" class="${v===1?"on":""}" onclick="setRisk('${r.id}',1)">Tidak</button>
+          <button type="button" class="${v===2?"on":""}" onclick="setRisk('${r.id}',2)">Ya</button>
+          <button type="button" class="${v===0?"on":""}" onclick="setRisk('${r.id}',0)">Belum tahu</button>
+        </div>
       </div>`;
     }).join("")}
+    <div class="field" style="margin-top:12px"><label>Catatan risiko</label>
+      <textarea data-f="riskNote" placeholder="Area fokus, akun material…">${esc(c.riskNote||"")}</textarea>
+    </div>
   </div>`;
 }
-function setEngStatus(s){
-  updateCompany(c=>({...c,status:s})); toast("Status diperbarui."); render();
-}
 
-/* ---- Client data + PDF ---- */
-function viewClient(){
-  const c=getCompany(); if(!c) return "";
+function tabPbc(c){
+  const list=c.pbc||[];
   return `
-  ${crumb([{l:"Audit KKP",on:"goYears()"},{l:view.year,on:`goCompanies('${view.year}')`},{l:c.name,on:`goCompany('${c.id}')`},{l:"Data Klien"}])}
-  <div class="toolbar">
-    <div><h1>Data Klien</h1><p class="muted">Review hasil ekstrak akta sebelum disimpan. Bukan 100% akurat.</p></div>
-    <div class="spacer"></div>
-    <button class="btn secondary" onclick="goCompany('${c.id}')">← Kembali</button>
-    <button class="btn primary" onclick="saveClient()">Simpan data</button>
-  </div>
-  <div class="panel">
-    <div class="formgrid">
-      <div class="field full"><label>Nama perusahaan</label><input id="fName" value="${esc(c.name)}"></div>
-      <div class="field"><label>Bentuk hukum</label><select id="fLegal">${["PT","CV","Firma","Yayasan","Koperasi","Lainnya"].map(x=>`<option ${c.legalForm===x?"selected":""}>${x}</option>`).join("")}</select></div>
-      <div class="field"><label>Kota / kedudukan</label><input id="fCity" value="${esc(c.city)}"></div>
-      <div class="field full"><label>Alamat</label><input id="fAddress" value="${esc(c.address)}"></div>
-      <div class="field"><label>Direktur</label><input id="fDirector" value="${esc(c.director)}"></div>
-      <div class="field"><label>Jabatan</label><input id="fPosition" value="${esc(c.position)}"></div>
-      <div class="field"><label>Komisaris</label><input id="fCommissioner" value="${esc(c.commissioner)}"></div>
-      <div class="field"><label>NPWP</label><input id="fNpwp" value="${esc(c.npwp)}"></div>
-      <div class="field"><label>NIB</label><input id="fNib" value="${esc(c.nib)}"></div>
-      <div class="field"><label>Nomor akta</label><input id="fAktaNo" value="${esc(c.aktaNo)}"></div>
-      <div class="field"><label>Tanggal akta</label><input id="fAktaDate" value="${esc(c.aktaDate)}"></div>
-      <div class="field"><label>Modal dasar</label><input id="fModalDasar" value="${esc(c.modalDasar)}"></div>
-      <div class="field"><label>Modal disetor</label><input id="fModalDisetor" value="${esc(c.modalDisetor)}"></div>
-      <div class="field"><label>Partner</label><input id="fPartner" value="${esc(c.engagementPartner)}"></div>
-      <div class="field"><label>Manager</label><input id="fManager" value="${esc(c.engagementManager)}"></div>
-      <div class="field full"><label>Catatan</label><textarea id="fNotes">${esc(c.notes)}</textarea></div>
+  <div class="card">
+    <p class="muted" style="margin:0 0 10px">Daftar minta ke klien (PBC) — pola Inflo / engagement platform. Status: diminta → diterima.</p>
+    <div class="row" style="gap:8px;margin-bottom:10px">
+      <input id="pbcIn" class="grow" placeholder="Contoh: Neraca saldo 31 Des…">
+      <button type="button" class="btn btn-p btn-sm" onclick="addPbc()">Tambah</button>
     </div>
-  </div>
-  <div class="panel" style="margin-top:16px">
-    <h3 style="margin:0 0 4px">Ekstrak dari PDF Akta</h3>
-    <p class="muted">PDF.js + OCR Tesseract (opsional untuk scan).</p>
-    <div class="toolbar" style="margin-top:12px">
-      <input id="aktaFile" type="file" accept=".pdf,application/pdf" style="flex:1;min-width:200px">
-      <button class="btn primary" id="btnRead" onclick="readAkta()">Baca PDF</button>
-      <button class="btn secondary hidden" id="btnOcr" onclick="runOCR()">Jalankan OCR</button>
-      <button class="btn secondary hidden" id="btnExtract" onclick="doExtract()">Ekstrak field</button>
-    </div>
-    <div id="readStatus" class="status hidden"></div>
-    <div id="fieldResults" style="margin-top:12px"></div>
-    <details class="hidden" id="rawWrap" style="margin-top:12px"><summary>Teks mentah PDF</summary><pre id="rawText"></pre></details>
+    ${list.length?list.map(p=>`
+      <div class="item">
+        <button type="button" class="chk ${p.status==="got"?"ok":""}" style="${p.status==="got"?"background:var(--ok);border-color:var(--ok);color:#fff":""}" onclick="togglePbc('${p.id}')">${p.status==="got"?"✓":""}</button>
+        <div class="grow"><div class="ttl ${p.status==="got"?"muted":""}" style="${p.status==="got"?"text-decoration:line-through":""}">${esc(p.title)}</div>
+        <div class="src">${p.status==="got"?"Diterima":"Masih diminta"}</div></div>
+        <button type="button" class="btn btn-g btn-sm" onclick="delPbc('${p.id}')">✕</button>
+      </div>`).join(""):`<div class="empty"><p>Belum ada permintaan. Tambah 2–3 dokumen penting dulu.</p></div>`}
   </div>`;
 }
-function saveClient(){
-  updateCompany(c=>({
-    ...c,
-    name:document.getElementById("fName").value.trim()||c.name,
-    legalForm:document.getElementById("fLegal").value,
-    city:document.getElementById("fCity").value.trim(),
-    address:document.getElementById("fAddress").value.trim(),
-    director:document.getElementById("fDirector").value.trim(),
-    position:document.getElementById("fPosition").value.trim(),
-    commissioner:document.getElementById("fCommissioner").value.trim(),
-    npwp:document.getElementById("fNpwp").value.trim(),
-    nib:document.getElementById("fNib").value.trim(),
-    aktaNo:document.getElementById("fAktaNo").value.trim(),
-    aktaDate:document.getElementById("fAktaDate").value.trim(),
-    modalDasar:document.getElementById("fModalDasar").value.trim(),
-    modalDisetor:document.getElementById("fModalDisetor").value.trim(),
-    engagementPartner:document.getElementById("fPartner").value.trim(),
-    engagementManager:document.getElementById("fManager").value.trim(),
-    notes:document.getElementById("fNotes").value.trim(),
-  }));
-  toast("Data klien disimpan."); goCompany(view.companyId);
-}
-async function loadPDFJS(){
-  if(window.pdfjsLib) return window.pdfjsLib;
-  const mod=await import(PDFJS_URL);
-  mod.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
-  window.pdfjsLib=mod; return mod;
-}
-function setStatus(text,tone){
-  const st=document.getElementById("readStatus");
-  st.className="status "+tone; st.textContent=text; st.classList.remove("hidden");
-}
-async function readAkta(){
-  const file=document.getElementById("aktaFile").files[0];
-  if(!file) return toast("Pilih PDF dulu.","warn");
-  document.getElementById("btnRead").disabled=true;
-  setStatus("Membaca PDF…","info");
-  try{
-    const pdfjs=await loadPDFJS();
-    const buf=await file.arrayBuffer();
-    const pdf=await pdfjs.getDocument({data:buf}).promise;
-    let text="";
-    for(let p=1;p<=pdf.numPages;p++){
-      setStatus(`Membaca halaman ${p}/${pdf.numPages}…`,"info");
-      const page=await pdf.getPage(p);
-      const content=await page.getTextContent();
-      text+=content.items.map(i=>i.str).join(" ")+"\n";
-    }
-    pdfCtx={text,pdf,file};
-    document.getElementById("rawText").textContent=text||"(kosong)";
-    document.getElementById("rawWrap").classList.remove("hidden");
-    document.getElementById("btnExtract").classList.remove("hidden");
-    if(text.trim().length<100){
-      setStatus("Teks sangat sedikit — kemungkinan scan. Jalankan OCR.","warn");
-      document.getElementById("btnOcr").classList.remove("hidden");
-    }else{
-      setStatus(`Berhasil membaca ${pdf.numPages} halaman.`,"ok");
-      doExtract();
-    }
-  }catch(e){ setStatus("Gagal: "+e.message,"warn"); }
-  finally{ document.getElementById("btnRead").disabled=false; }
-}
-function normalize(s){return String(s||"").replace(/\s+/g," ").trim();}
-function findFirst(text,patterns){
-  for(const p of patterns){const m=text.match(p); if(m&&m[1]) return normalize(m[1]);}
-  return "";
-}
-function extractFields(t){
-  return {
-    "Nama Perusahaan":findFirst(t,[/(?:nama\s+perseroan|nama\s+perusahaan)\s*[:\-]?\s*([A-Z][A-Z0-9 .,&()'-]{3,})/i,/\b(PT\.?\s+[A-Z][A-Z0-9 .,&()'-]{2,80})/]),
-    "Nomor Akta":findFirst(t,[/(?:akta\s+(?:pendirian|perubahan)[^0-9]{0,40})(?:nomor|no\.?)\s*[:.]?\s*([0-9]+)/i]),
-    "Tanggal Akta":findFirst(t,[/(?:pada\s+tanggal|tanggal)\s+([0-9]{1,2}\s+(?:januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember)\s+[0-9]{4})/i]),
-    "Kedudukan":findFirst(t,[/(?:berkedudukan|berkedudukan di|tempat kedudukan)\s+(?:di\s+)?([A-Za-z .'-]{3,80})/i]),
-    "Direktur":findFirst(t,[/(?:direktur(?:\s+utama)?|direksi)\s*[:\-]?\s*([A-Z][A-Za-z .'-]{3,80})/i]),
-    "Komisaris":findFirst(t,[/(?:komisaris(?:\s+utama)?)\s*[:\-]?\s*([A-Z][A-Za-z .'-]{3,80})/i]),
-    "Modal Dasar":findFirst(t,[/(?:modal\s+dasar)\s*(?:sebesar|adalah|:)?\s*(Rp[\s.0-9]+(?:,[0-9]+)?)/i]),
-    "Modal Ditempatkan/Disetor":findFirst(t,[/(?:modal\s+(?:ditempatkan|ditempatkan dan disetor|disetor))\s*(?:sebesar|adalah|:)?\s*(Rp[\s.0-9]+(?:,[0-9]+)?)/i])
-  };
-}
-function doExtract(){
-  const fields=extractFields(pdfCtx.text||"");
-  const box=document.getElementById("fieldResults");
-  box.innerHTML=`<table><tr><th>Field</th><th>Hasil (edit jika perlu)</th></tr>
-  ${Object.entries(fields).map(([k,v])=>`<tr><td><b>${esc(k)}</b></td><td><input data-field="${esc(k)}" value="${esc(v)}" placeholder="Tidak ditemukan"></td></tr>`).join("")}
-  </table>
-  <div class="toolbar" style="margin-top:12px"><button class="btn primary" onclick="applyFields()">Terapkan ke form</button></div>`;
-}
-function applyFields(){
-  const vals={}; document.querySelectorAll("[data-field]").forEach(i=>vals[i.dataset.field]=i.value);
-  const map={
-    "Nama Perusahaan":"fName",Kedudukan:"fCity",Direktur:"fDirector",Komisaris:"fCommissioner",
-    "Nomor Akta":"fAktaNo","Tanggal Akta":"fAktaDate","Modal Dasar":"fModalDasar","Modal Ditempatkan/Disetor":"fModalDisetor"
-  };
-  for(const [k,id] of Object.entries(map)) if(vals[k]) document.getElementById(id).value=vals[k];
-  toast("Diterapkan ke form — klik Simpan data.");
-}
-async function runOCR(){
-  if(!pdfCtx.pdf) return toast("PDF belum dimuat.","warn");
-  setStatus("Memuat OCR…","info");
-  try{
-    if(!window.Tesseract){
-      await new Promise((res,rej)=>{const s=document.createElement("script");s.src=TESS_URL;s.onload=res;s.onerror=rej;document.head.appendChild(s);});
-    }
-    let all="";
-    const pdf=pdfCtx.pdf;
-    for(let p=1;p<=pdf.numPages;p++){
-      setStatus(`OCR halaman ${p}/${pdf.numPages}…`,"info");
-      const page=await pdf.getPage(p);
-      const viewport=page.getViewport({scale:1.5});
-      const canvas=document.createElement("canvas"); canvas.width=viewport.width; canvas.height=viewport.height;
-      await page.render({canvasContext:canvas.getContext("2d"),viewport}).promise;
-      const result=await Tesseract.recognize(canvas,"ind",{logger:m=>{
-        if(m.status==="recognizing text") setStatus(`OCR ${p}/${pdf.numPages} — ${Math.round(m.progress*100)}%`,"info");
-      }});
-      all+=result.data.text+"\n";
-    }
-    pdfCtx.text=all;
-    document.getElementById("rawText").textContent=all;
-    document.getElementById("rawWrap").classList.remove("hidden");
-    setStatus("OCR selesai. Periksa field.","ok");
-    doExtract();
-  }catch(e){ setStatus("OCR gagal: "+e.message,"warn"); }
+
+function tabEvidence(c){
+  const list=c.evidence||[];
+  return `
+  <div class="card">
+    <p class="muted" style="margin:0 0 10px">Bukti + <strong>sumber</strong> (pola DataSnipper: linkage workpaper↔sumber). File biner belakangan — catat dulu jejaknya.</p>
+    <div class="g2">
+      <div class="field"><label>Judul bukti</label><input id="evTitle" placeholder="Konfirmasi piutang"></div>
+      <div class="field"><label>Sumber</label><input id="evSource" placeholder="Email klien / Excel sheet X"></div>
+    </div>
+    <div class="field"><label>Terkait langkah</label>
+      <select id="evStep">${STEPS.map(s=>`<option value="${s.id}">${esc(s.title)}</option>`).join("")}</select>
+    </div>
+    <button type="button" class="btn btn-p btn-sm" onclick="addEv()">＋ Catat bukti</button>
+    <div style="margin-top:12px">
+      ${list.length?list.map(e=>`
+        <div class="item">
+          <div class="grow">
+            <div class="ttl">${esc(e.title)}</div>
+            <div class="src">Sumber: ${esc(e.source||"—")} · ${esc(STEPS.find(s=>s.id===e.stepId)?.title||e.stepId)}</div>
+          </div>
+          <button type="button" class="btn btn-g btn-sm" onclick="delEv('${e.id}')">✕</button>
+        </div>`).join(""):`<div class="empty"><p>Belum ada bukti tercatat.</p></div>`}
+    </div>
+  </div>`;
 }
 
-/* ---- Folder ---- */
-function viewFolder(){
-  const c=getCompany(); if(!c) return "";
-  const f=view.folder; const folder=c.folders[f]; const m=FOLDER_META[f];
+function tabDraft(c){
+  const rs=riskScore(c);
+  const p=progress(c);
+  const openPbc=(c.pbc||[]).filter(x=>x.status==="open").map(x=>"• "+x.title).join("\n")||"• (tidak ada)";
+  const risks=RISK_Q.filter(r=>c.risk?.[r.id]===2).map(r=>"• "+r.q).join("\n")||"• (belum ada flag Ya)";
+  const draft =
+`RINGKASAN PENUGASAN — ${c.name||"(nama)"}
+Tahun buku: ${c.year}
+Status langkah: ${p.done}/${p.total} (${p.pct}%)
+Skor sinyal risiko: ${rs.pts}/10 (${rs.label})
+
+AREA RISIKO (jawaban Ya):
+${risks}
+
+DOKUMEN MASIH DIMINTA (PBC):
+${openPbc}
+
+CATATAN RISIKO:
+${c.riskNote||"(kosong)"}
+
+Direktur: ${c.director||"—"} · Kota: ${c.city||"—"} · NPWP: ${c.npwp||"—"}
+
+— Draf otomatis dari Audit KKP Easy. Bukan opini audit. Wajib direview.`;
+
   return `
-  ${crumb([{l:"Audit KKP",on:"goYears()"},{l:view.year,on:`goCompanies('${view.year}')`},{l:c.name,on:`goCompany('${c.id}')`},{l:f}])}
-  <div class="toolbar">
-    <div><h1>${m.icon} ${esc(f)}</h1><p class="muted">${esc(m.desc)}</p></div>
-    <div class="spacer"></div>
-    <select class="btn secondary" onchange="setFolderStatus(this.value)">
-      ${Object.entries(FS).map(([k,v])=>`<option value="${k}" ${folder.status===k?"selected":""}>${v[0]}</option>`).join("")}
-    </select>
-    <button class="btn secondary" onclick="goCompany('${c.id}')">← Kembali</button>
-    <button class="btn primary" onclick="promptAddDoc()">＋ Item dokumen</button>
-  </div>
-  <div class="panel folder-head">
-    <div class="icon-tile">${m.icon}</div>
-    <div><div style="font-weight:700">${folder.items.length} item</div><div class="muted small">Status: ${FS[folder.status][0]}</div></div>
-  </div>
-  ${folder.items.length?`<div class="grid" style="margin-top:14px">${folder.items.map(it=>`
-    <div class="panel">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:start">
-        <div style="flex:1;min-width:200px">
-          <input value="${esc(it.title)}" onchange="patchDoc('${it.id}',{title:this.value})">
-          <textarea style="margin-top:8px" placeholder="Catatan…" onchange="patchDoc('${it.id}',{note:this.value})">${esc(it.note)}</textarea>
-        </div>
-        <select class="btn secondary" onchange="patchDoc('${it.id}',{status:this.value})">
-          ${Object.entries(DS).map(([k,v])=>`<option value="${k}" ${it.status===k?"selected":""}>${v}</option>`).join("")}
-        </select>
-        <button class="btn ghost" onclick="deleteDoc('${it.id}')">🗑</button>
+  <div class="card">
+    <p class="muted" style="margin:0 0 10px">Asisten draf (pola CoCounsel / Caseware AiDA — versi template). Edit bebas, salin ke Word/WA partner.</p>
+    <div class="draft" id="draftBox">${esc(draft)}</div>
+    <div class="row wrap" style="gap:8px;margin-top:10px">
+      <button type="button" class="btn btn-p btn-sm" onclick="copyDraft()">Salin draf</button>
+      <button type="button" class="btn btn-s btn-sm" onclick="setTab('risiko')">Perbarui risiko dulu</button>
+    </div>
+  </div>`;
+}
+
+/* ---------- actions ---------- */
+function setYear(y){ui.year=y;render()}
+function setTab(t){ui.tab=t;render();scrollTo({top:0,behavior:"smooth"})}
+function goList(){ui.screen="list";ui.id=null;render();scrollTo(0,0)}
+function openClient(id){ui.screen="detail";ui.id=id;ui.tab="langkah";ui.open="info";render();scrollTo(0,0)}
+function toggleOpen(id){ui.open=ui.open===id?null:id;render()}
+
+function toggleStep(id){
+  const c=client(ui.id); if(!c) return;
+  document.querySelectorAll("[data-f]").forEach(el=>{c[el.dataset.f]=el.value});
+  if(!c.steps[id]) c.steps[id]={done:false,note:""};
+  if(id==="info" && !c.steps[id].done && !String(c.name||"").trim()){toast("Isi nama dulu");return}
+  c.steps[id].done=!c.steps[id].done;
+  upsert(c);
+  if(c.steps[id].done){
+    const next=STEPS.find(s=>!c.steps[s.id]?.done);
+    ui.open=next?next.id:id;
+    toast(next?"Lanjut langkah berikutnya":"Semua langkah selesai 🎉");
+  } else toast("Centang dibatalkan");
+  render();
+}
+
+function setRisk(id,v){
+  const c=client(ui.id); if(!c) return;
+  c.risk[id]=v; upsert(c); render();
+}
+
+function addPbc(){
+  const c=client(ui.id); if(!c) return;
+  const t=(document.getElementById("pbcIn")?.value||"").trim();
+  if(!t){toast("Isi judul dokumen");return}
+  c.pbc.unshift({id:uid(),title:t,status:"open"});
+  upsert(c); toast("PBC ditambah"); render();
+}
+function togglePbc(id){
+  const c=client(ui.id); if(!c) return;
+  c.pbc=c.pbc.map(p=>p.id===id?{...p,status:p.status==="got"?"open":"got"}:p);
+  upsert(c); render();
+}
+function delPbc(id){
+  const c=client(ui.id); if(!c) return;
+  c.pbc=c.pbc.filter(p=>p.id!==id); upsert(c); render();
+}
+
+function addEv(){
+  const c=client(ui.id); if(!c) return;
+  const title=(document.getElementById("evTitle")?.value||"").trim();
+  const source=(document.getElementById("evSource")?.value||"").trim();
+  const stepId=document.getElementById("evStep")?.value||"work";
+  if(!title){toast("Isi judul bukti");return}
+  c.evidence.unshift({id:uid(),title,source,stepId});
+  upsert(c); toast("Bukti dicatat"); render();
+}
+function delEv(id){
+  const c=client(ui.id); if(!c) return;
+  c.evidence=c.evidence.filter(e=>e.id!==id); upsert(c); render();
+}
+
+function copyDraft(){
+  const t=document.getElementById("draftBox")?.innerText||"";
+  navigator.clipboard?.writeText(t).then(()=>toast("Draf disalin")).catch(()=>toast("Salin manual saja"));
+}
+
+function sheetNew(){
+  document.getElementById("modal").innerHTML=`
+  <div class="sheet-bg" onclick="if(event.target===this)closeModal()">
+    <div class="sheet">
+      <h3>Tambah klien</h3>
+      <p class="sub">Cukup nama & tahun. Sisanya belakangan.</p>
+      <div class="field"><label>Nama perusahaan</label><input id="nName" placeholder="PT …"></div>
+      <div class="field"><label>Tahun buku</label><input id="nYear" maxlength="4" value="${yNow()}"></div>
+      <div class="acts">
+        <button type="button" class="btn btn-s" onclick="closeModal()">Batal</button>
+        <button type="button" class="btn btn-p" onclick="createClient()">Simpan & buka</button>
       </div>
-    </div>`).join("")}</div>`:`
-  <div class="panel empty" style="margin-top:14px"><h3>Folder masih kosong</h3>
-  <button class="btn primary" style="margin-top:12px" onclick="promptAddDoc()">＋ Tambah item</button></div>`}`;
+    </div>
+  </div>`;
+  setTimeout(()=>document.getElementById("nName")?.focus(),40);
 }
-function setFolderStatus(s){
-  updateCompany(c=>({...c,folders:{...c.folders,[view.folder]:{...c.folders[view.folder],status:s}}}));
-  toast("Status folder diperbarui."); render();
+function sheetDel(id){
+  document.getElementById("modal").innerHTML=`
+  <div class="sheet-bg" onclick="if(event.target===this)closeModal()">
+    <div class="sheet">
+      <h3>Hapus klien?</h3>
+      <p class="sub">Tidak bisa dibatalkan di perangkat ini.</p>
+      <div class="acts">
+        <button type="button" class="btn btn-s" onclick="closeModal()">Batal</button>
+        <button type="button" class="btn btn-d" onclick="closeModal();delClient('${id}')">Ya, hapus</button>
+      </div>
+    </div>
+  </div>`;
 }
-function promptAddDoc(){
-  modal(`<h3>Tambah item dokumen</h3>
-  <div class="field" style="margin-top:14px"><label>Judul</label><input id="mTitle" placeholder="Surat perikatan"></div>
-  <div class="field"><label>Catatan</label><textarea id="mNote"></textarea></div>
-  <div class="toolbar" style="justify-content:flex-end;margin:16px 0 0">
-    <button class="btn secondary" onclick="closeModal()">Batal</button>
-    <button class="btn primary" onclick="addDoc()">Tambah</button>
-  </div>`);
+function closeModal(){document.getElementById("modal").innerHTML=""}
+function createClient(){
+  const name=(document.getElementById("nName")?.value||"").trim();
+  const year=(document.getElementById("nYear")?.value||"").trim();
+  if(!name){toast("Isi nama");return}
+  if(!/^\d{4}$/.test(year)){toast("Tahun 4 digit");return}
+  const c=blank({name,year});
+  upsert(c); closeModal(); toast("Klien ditambah"); openClient(c.id);
 }
-function addDoc(){
-  const title=(document.getElementById("mTitle")?.value||"").trim();
-  if(!title) return toast("Judul wajib.","warn");
-  const note=(document.getElementById("mNote")?.value||"").trim();
-  const item={id:crypto.randomUUID(),title,note,status:"missing",updatedAt:new Date().toISOString()};
-  updateCompany(c=>{
-    const folder=c.folders[view.folder];
-    return {...c,folders:{...c.folders,[view.folder]:{
-      status:folder.status==="empty"?"in_progress":folder.status,
-      items:[...folder.items,item]
-    }}};
-  });
-  closeModal(); toast("Item ditambahkan."); render();
-}
-function patchDoc(id,patch){
-  updateCompany(c=>({...c,folders:{...c.folders,[view.folder]:{
-    ...c.folders[view.folder],
-    items:c.folders[view.folder].items.map(it=>it.id===id?{...it,...patch,updatedAt:new Date().toISOString()}:it)
-  }}}));
-}
-function deleteDoc(id){
-  updateCompany(c=>({...c,folders:{...c.folders,[view.folder]:{
-    ...c.folders[view.folder],
-    items:c.folders[view.folder].items.filter(it=>it.id!==id)
-  }}}));
-  toast("Item dihapus."); render();
+function delClient(id){
+  db.clients=db.clients.filter(c=>c.id!==id); save(); toast("Dihapus"); goList();
 }
 
-/* ---- Export / import ---- */
-function exportJson(){
-  const blob=new Blob([JSON.stringify(store,null,2)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob);
-  a.download=`kap-audit-backup-${new Date().toISOString().slice(0,10)}.json`; a.click();
-  toast("Backup diunduh.");
+function doExport(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`audit-kkp-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); toast("Backup diunduh");
 }
-function importJson(){
-  const inp=document.createElement("input"); inp.type="file"; inp.accept="application/json,.json";
-  inp.onchange=()=>{
-    const f=inp.files[0]; if(!f) return;
-    const r=new FileReader();
-    r.onload=()=>{
-      try{
-        const p=JSON.parse(String(r.result||""));
-        let map=p.companiesByYear||p;
-        const companiesByYear={};
-        for(const [y,list] of Object.entries(map)){
-          if(!Array.isArray(list)) continue;
-          companiesByYear[y]=list.map(normalizeCompany);
-        }
-        if(!Object.keys(companiesByYear).length) throw new Error("Format tidak dikenali");
-        store={version:1,companiesByYear}; save(store); toast("Import berhasil."); goYears();
-      }catch(e){ toast(e.message||"Import gagal","warn"); }
-    };
-    r.readAsText(f);
-  };
-  inp.click();
+
+/* PDF assist */
+async function readAkta(){
+  const file=document.getElementById("akta")?.files?.[0];
+  const st=document.getElementById("aktaSt");
+  const btn=document.getElementById("btnAkta");
+  if(!file){toast("Pilih PDF");return}
+  if(btn) btn.disabled=true;
+  if(st) st.textContent="Membaca…";
+  try{
+    if(!window.pdfjsLib){
+      const mod=await import(PDFJS_URL);
+      mod.GlobalWorkerOptions.workerSrc=PDFJS_WORKER;
+      window.pdfjsLib=mod;
+    }
+    const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+    const max=Math.min(pdf.numPages,3);
+    let text="";
+    for(let i=1;i<=max;i++){
+      const page=await pdf.getPage(i);
+      const content=await page.getTextContent();
+      text+=content.items.map(x=>x.str).join(" ")+"\n";
+    }
+    const find=(ps)=>{for(const p of ps){const m=text.match(p);if(m?.[1])return m[1].replace(/\s+/g," ").trim()}return""};
+    const name=find([/(?:nama\s+perseroan|nama\s+perusahaan)\s*[:\-]?\s*([A-Z][A-Z0-9 .,&()'-]{3,})/i,/\b(PT\.?\s+[A-Z][A-Z0-9 .,&()'-]{2,50})/]);
+    const city=find([/(?:berkedudukan(?:\s+di)?|tempat kedudukan)\s+(?:di\s+)?([A-Za-z .'-]{3,40})/i]);
+    const director=find([/(?:direktur(?:\s+utama)?)\s*[:\-]?\s*([A-Z][A-Za-z .'-]{3,40})/i]);
+    const c=client(ui.id); if(!c) return;
+    if(name) c.name=name; if(city) c.city=city; if(director) c.director=director;
+    document.querySelectorAll("[data-f]").forEach(el=>{
+      if(el.dataset.f==="name"&&name) el.value=name;
+      if(el.dataset.f==="city"&&city) el.value=city;
+      if(el.dataset.f==="director"&&director) el.value=director;
+      c[el.dataset.f]=el.value;
+    });
+    upsert(c);
+    const found=[name&&"nama",city&&"kota",director&&"direktur"].filter(Boolean);
+    if(st) st.textContent=found.length?`Terisi: ${found.join(", ")}. Cek manual.`:"Teks tipis / scan — isi manual saja.";
+    toast(found.length?"Data dari PDF":"Isi manual saja");
+    const t=document.getElementById("title"); if(t) t.textContent=c.name||"Tanpa nama";
+  }catch(e){ if(st) st.textContent="Gagal: "+e.message; toast("Gagal baca PDF"); }
+  finally{ if(btn) btn.disabled=false; }
 }
+
+/* live inputs */
+document.addEventListener("input",e=>{
+  if(e.target?.id==="q"){
+    ui.q=e.target.value;
+    const pos=e.target.selectionStart;
+    render();
+    const box=document.getElementById("q");
+    if(box){box.focus(); try{box.setSelectionRange(pos,pos)}catch{}}
+    return;
+  }
+  const c=client(ui.id); if(!c) return;
+  if(e.target?.dataset?.f){
+    c[e.target.dataset.f]=e.target.value;
+    upsert(c);
+    if(e.target.dataset.f==="name"){
+      const t=document.getElementById("title"); if(t) t.textContent=c.name||"Tanpa nama";
+    }
+    const b=document.getElementById("stBadge");
+    if(b){const st=ST[c.status]; b.className="pill "+st.cls; b.textContent=st.label}
+  }
+  if(e.target?.dataset?.stepNote){
+    const sid=e.target.dataset.stepNote;
+    if(!c.steps[sid]) c.steps[sid]={done:false,note:""};
+    c.steps[sid].note=e.target.value;
+    upsert(c);
+  }
+});
+
+Object.assign(window,{
+  setYear,setTab,goList,openClient,toggleOpen,toggleStep,setRisk,
+  addPbc,togglePbc,delPbc,addEv,delEv,copyDraft,
+  sheetNew,sheetDel,closeModal,createClient,delClient,doExport,readAkta
+});
 
 render();
 </script>

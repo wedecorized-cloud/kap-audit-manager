@@ -1,32 +1,30 @@
-# PRD — KAP Audit Manager (standalone)
+# PRD — Audit KKP Easy v0.2
 
-**Product:** KAP Audit Manager  
-**Lokasi:** `/Users/mymac/Documents/Accountant/kap-audit-manager`  
-**Deploy:** project Vercel **terpisah** (bukan Ledgera Ops)  
-**Version:** 0.1  
+**Prod:** https://kap-audit-manager.vercel.app  
+**Path:** `/Users/mymac/Documents/Accountant/kap-audit-manager`  
+**Deploy:** Vercel project **kap-audit-manager** (bukan Ledgera Ops)
 
-## Ringkasan
-Workspace audit KAP: **Tahun buku → Klien → Fase KKP**, data klien, ekstrak PDF akta (PDF.js + OCR), status engagement/folder, export/import JSON.
+## Positioning (dari SWOT)
+Engagement cockpit untuk KAP Indonesia — **bukan** MindBridge (full-population AI) atau DataSnipper (Excel evidence).  
+Teman kerja harian: langkah, risiko ringkas, PBC, bukti ber-sumber, draf.
 
-## Bukan
-- Bukan modul di dalam Ledgera Ops Vercel  
-- Bukan software akuntansi / buku besar  
+Lihat: `docs/SWOT-AI-AUDIT-TOOLS.md`
 
-## MVP
-- CRUD tahun & klien + search  
-- Data klien lengkap + PDF extract + OCR  
-- 5 folder KKP + item dokumen  
-- localStorage + export/import  
-- Modal/toast (bukan prompt/alert kasar)  
+## UX
+- **2 layar saja:** Daftar klien ↔ Detail klien  
+- Tahun = filter chip, bukan folder navigasi  
+- Auto-save localStorage (`kap_audit_easy_v2`)  
+- Strip **Fokus hari ini**  
 
-## Status
-- Engagement: draft | in_progress | review | completed  
-- Folder: empty | in_progress | complete  
-- Doc item: missing | received | reviewed | final  
+## Modul detail (tabs)
+1. **Langkah** — 5 step centang (info → pra → risiko → kerja → lapor)  
+2. **Risiko** — 5 pertanyaan → skor 0–10 (risk signal lite)  
+3. **Minta dokumen (PBC)** — open / diterima  
+4. **Bukti** — judul + sumber + langkah (evidence linkage lite)  
+5. **Asisten draf** — template ringkasan (bukan opini)  
 
-## Persistensi
-- MVP: `localStorage` key `ledgera_audit_v1`  
-- Migrate legacy `kap_companies_v8` otomatis  
+## Non-goals
+Full GL ML · Excel add-in · multi-user cloud (nanti) · ganti software akuntansi  
 
-## Roadmap
-Phase 1 cloud DB multi-user (schema terpisah, opsional).  
+## Disclaimer
+Skor & draf **wajib direview manusia**.  
