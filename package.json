@@ -1,0 +1,10 @@
+{
+  "name": "kap-audit-manager",
+  "version": "0.1.0",
+  "private": true,
+  "description": "KAP Audit Manager — standalone workspace (not Ledgera Ops)",
+  "scripts": {
+    "dev": "npx --yes serve public -l 3456",
+    "start": "npx --yes serve public -l 3456"
+  }
+}
